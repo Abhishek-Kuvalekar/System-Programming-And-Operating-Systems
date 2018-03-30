@@ -24,6 +24,7 @@ errors = {"ORG_ERROR"           : "Invalid operand for ORG.",
           "UNDEFINED_VARIABLE"  : "Undefined variable.",
           "UNUSED_VARIABLE"     : "Unused variable."}
 
+
 class Instruction():
     def __init__(self, opcode, operand, lineNumber):
         self.opcode = opcode
