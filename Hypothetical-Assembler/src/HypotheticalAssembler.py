@@ -71,8 +71,9 @@ class Assembler():
                     self.hasErrorOccurred = True
                 self.outputDict[self.startAddress] = Instruction(instructions.get(instruction.upper()), operand,
                                                                  lineNumber)
-                if (self.symbolTable.get(operand, None) == None):
-                    self.symbolTable[operand] = -1
+                if(operand != None):
+                    if (self.symbolTable.get(operand, None) == None):
+                        self.symbolTable[operand] = -1
                 if (instruction != "STOP"):
                     self.startAddress += 2
                 else:
@@ -110,9 +111,25 @@ class Assembler():
                     self.completePassOne(lineNumber, line)
 
     def generateOutputFile(self):
-        pass
+        file = self.fileManager.openOutputFile()
+        addressList = list(self.outputDict.keys())
+        addressList.sort()
+        for address in addressList:
+            line = str(address) + "\t" + str(self.outputDict[address].opcode) + "\n"
+            file.write(line)
+            if(self.outputDict[address].operand != None):
+                operandAddress = self.symbolTable[self.outputDict[address].operand]
+                line = str(address + 1) + "\t" + str(operandAddress) + "\n"
+                file.write(line)
 
+            if(operandAddress == -1):
+                self.printErrorMessage(errors['UNDEFINED_VARIABLE'], self.outputDict[address].lineNumber)
+                file.close()
+                os.remove(self.outputFile)
+                sys.exit(1)
 
+    def getErrorOccurred(self):
+        return self.hasErrorOccurred
 
 class FileManager():
     def __init__(self, inputFile, outputFile):
@@ -145,7 +162,10 @@ def main(argv=sys.argv):
 
     assembler = Assembler(inputFile, outputFile)
     assembler.parseInputFile()
-    assembler.generateOutputFile()
+    if(assembler.getErrorOccurred() == False):
+        assembler.generateOutputFile()
+    else:
+        sys.exit(1)
     return 0
 
 if __name__ == "__main__":
