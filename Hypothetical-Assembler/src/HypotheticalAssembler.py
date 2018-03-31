@@ -22,7 +22,10 @@ errors = {"ORG_ERROR"           : "Invalid operand for ORG.",
           "FEW_OPERANDS"        : "Too few operands.",
           "REPEAT_ASSIGNMENT"   : "Repeated assignment.",
           "UNDEFINED_VARIABLE"  : "Undefined variable.",
-          "UNUSED_VARIABLE"     : "Unused variable."}
+          "UNUSED_VARIABLE"     : "Unused variable.",
+          "DUPLICATE_LABEL"     : "Duplicate label.",
+          "EXTRA_OPERANDS"      : "Extra operands.",
+          "INVALID_LABEL"       : "Invalid label."}
 
 
 class Instruction():
@@ -50,12 +53,60 @@ class Assembler():
 
     def completePassOne(self, lineNumber, line):
         try:
-            if (line.rstrip('\n').upper() == "STOP"):
+            iList = line.rstrip('\n').split(' ')
+            if(len(iList) == 1):
+                instruction = iList[0]
+                operand = None
+            elif(len(iList) == 2):
+                if(iList[0].endswith(':') == True):
+                    label = iList[0].rstrip(":")
+                    if (self.symbolTable.get(label, None) == None):
+                        self.symbolTable[label] = self.startAddress
+                    else:
+                        if(self.symbolTable[label] == -1):
+                            self.symbolTable[label] = self.startAddress
+                        else:
+                            self.printErrorMessage(errors['DUPLICATE_LABEL'], lineNumber)
+                            self.hasErrorOccurred = True
+                    if(iList[1].upper() == "STOP"):
+                        instruction = iList[1].upper()
+                        operand = None
+                    else:
+                        self.printErrorMessage(errors['FEW_OPERANDS'], lineNumber)
+                        self.hasErrorOccurred = True
+                else:
+                    (instruction, operand) = (iList[0], iList[1])
+            elif(len(iList) == 3):
+                (label, instruction, operand) = (iList[0], iList[1], iList[2])
+                if(label != None):
+                    if(label.endswith(':') == True):
+                        label = label.rstrip(":")
+                        if(self.symbolTable.get(label, None) == None):
+                            self.symbolTable[label] = self.startAddress
+                        else:
+                            self.printErrorMessage(errors['DUPLICATE_LABEL'], lineNumber)
+                            self.hasErrorOccurred = True
+                    else:
+                        self.printErrorMessage(errors['INVALID_LABEL'], lineNumber)
+                        self.hasErrorOccurred = True
+                else:
+                    self.printErrorMessage(errors['INVALID_INSTRUCTION'], lineNumber)
+                    self.hasErrorOccurred = True
+
+            '''if (line.rstrip('\n').upper() == "STOP"):
                 instruction = "STOP"
                 operand = None
                 self.dataSegment = True
             else:
-                (instruction, operand) = line.rstrip('\n').split(' ')
+                (instruction, operand) = line.rstrip('\n').split(' ')'''
+            if (instruction == "STOP"):
+                if(operand == None):
+                    self.dataSegment = True
+                else:
+                    self.printErrorMessage(errors['EXTRA_OPERANDS'], lineNumber)
+                    self.hasErrorOccurred = True
+            '''self.printErrorMessage(errors['FEW_OPERANDS'], lineNumber)
+             self.hasErrorOccurred = True'''
             if (instruction == "ORG"):
                 if (operand != None):
                     try:
@@ -71,7 +122,7 @@ class Assembler():
                     self.printErrorMessage(errors['INVALID_INSTRUCTION'], lineNumber)
                     self.hasErrorOccurred = True
                 self.outputDict[self.startAddress] = Instruction(instructions.get(instruction.upper()), operand,
-                                                                 lineNumber)
+                                                                     lineNumber)
                 if(operand != None):
                     if (self.symbolTable.get(operand, None) == None):
                         self.symbolTable[operand] = -1
