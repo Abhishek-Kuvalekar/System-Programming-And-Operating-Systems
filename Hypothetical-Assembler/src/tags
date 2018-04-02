@@ -1,0 +1,26 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Assembler	HypotheticalAssembler.py	/^class Assembler():$/;"	c
+FileManager	HypotheticalAssembler.py	/^class FileManager():$/;"	c
+Instruction	HypotheticalAssembler.py	/^class Instruction():$/;"	c
+__init__	HypotheticalAssembler.py	/^    def __init__(self, inputFile, outputFile):$/;"	m	class:Assembler
+__init__	HypotheticalAssembler.py	/^    def __init__(self, inputFile, outputFile):$/;"	m	class:FileManager
+__init__	HypotheticalAssembler.py	/^    def __init__(self, opcode, operand, lineNumber):$/;"	m	class:Instruction
+completePassOne	HypotheticalAssembler.py	/^    def completePassOne(self, lineNumber, line):$/;"	m	class:Assembler
+completeSymbolTable	HypotheticalAssembler.py	/^    def completeSymbolTable(self, lineNumber, line):$/;"	m	class:Assembler
+errors	HypotheticalAssembler.py	/^errors = {"ORG_ERROR"           : "Invalid operand for ORG.",$/;"	v
+generateOutputFile	HypotheticalAssembler.py	/^    def generateOutputFile(self):$/;"	m	class:Assembler
+getErrorOccurred	HypotheticalAssembler.py	/^    def getErrorOccurred(self):$/;"	m	class:Assembler
+instructions	HypotheticalAssembler.py	/^instructions = {"STOP":   0,$/;"	v
+macros	HypotheticalAssembler.py	/^macros = {"DB" : 1,$/;"	v
+main	HypotheticalAssembler.py	/^def main(argv=sys.argv):$/;"	f
+openInputFile	HypotheticalAssembler.py	/^    def openInputFile(self):$/;"	m	class:FileManager
+openOutputFile	HypotheticalAssembler.py	/^    def openOutputFile(self):$/;"	m	class:FileManager
+parseInputFile	HypotheticalAssembler.py	/^    def parseInputFile(self):$/;"	m	class:Assembler
+printErrorMessage	HypotheticalAssembler.py	/^    def printErrorMessage(self, message, lineNumber):$/;"	m	class:Assembler
+printWarningMessage	HypotheticalAssembler.py	/^    def printWarningMessage(self, message, lineNumber):$/;"	m	class:Assembler
+writeFile	HypotheticalAssembler.py	/^    def writeFile(self):$/;"	m	class:FileManager
