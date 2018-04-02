@@ -84,8 +84,11 @@ class Assembler():
                         if(self.symbolTable.get(label, None) == None):
                             self.symbolTable[label] = self.startAddress
                         else:
-                            self.printErrorMessage(errors['DUPLICATE_LABEL'], lineNumber)
-                            self.hasErrorOccurred = True
+                            if(self.symbolTable[label] == -1):
+                                self.symbolTable[label] = self.startAddress
+                            else
+                                self.printErrorMessage(errors['DUPLICATE_LABEL'], lineNumber)
+                                self.hasErrorOccurred = True
                     else:
                         self.printErrorMessage(errors['INVALID_LABEL'], lineNumber)
                         self.hasErrorOccurred = True
@@ -93,20 +96,12 @@ class Assembler():
                     self.printErrorMessage(errors['INVALID_INSTRUCTION'], lineNumber)
                     self.hasErrorOccurred = True
 
-            '''if (line.rstrip('\n').upper() == "STOP"):
-                instruction = "STOP"
-                operand = None
-                self.dataSegment = True
-            else:
-                (instruction, operand) = line.rstrip('\n').split(' ')'''
             if (instruction == "STOP"):
                 if(operand == None):
                     self.dataSegment = True
                 else:
                     self.printErrorMessage(errors['EXTRA_OPERANDS'], lineNumber)
                     self.hasErrorOccurred = True
-            '''self.printErrorMessage(errors['FEW_OPERANDS'], lineNumber)
-             self.hasErrorOccurred = True'''
             if (instruction == "ORG"):
                 if (operand != None):
                     try:
@@ -171,14 +166,15 @@ class Assembler():
             file.write(line)
             if(self.outputDict[address].operand != None):
                 operandAddress = self.symbolTable[self.outputDict[address].operand]
-                line = str(address + 1) + "\t" + str(operandAddress) + "\n"
-                file.write(line)
 
             if(operandAddress == -1):
                 self.printErrorMessage(errors['UNDEFINED_VARIABLE'], self.outputDict[address].lineNumber)
                 file.close()
                 os.remove(self.outputFile)
                 sys.exit(1)
+            else:
+                line = str(address + 1) + "\t" + str(operandAddress) + "\n"
+                file.write(line)
 
     def getErrorOccurred(self):
         return self.hasErrorOccurred
