@@ -86,7 +86,7 @@ class Assembler():
                         else:
                             if(self.symbolTable[label] == -1):
                                 self.symbolTable[label] = self.startAddress
-                            else
+                            else:
                                 self.printErrorMessage(errors['DUPLICATE_LABEL'], lineNumber)
                                 self.hasErrorOccurred = True
                     else:
